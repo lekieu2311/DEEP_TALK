@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Deep Talk với Người Yêu</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #fff0f5;
+    text-align: center;
+    padding: 50px;
+    color: #333;
+  }
+  h1 { color: #d147a3; }
+  button {
+    padding: 12px 25px;
+    font-size: 16px;
+    margin: 20px;
+    border: none;
+    background-color: #f08cb4;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover { background-color: #e15ca6; }
+  #question {
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  #chatBox {
+    margin-top: 40px;
+    border: 2px solid #f08cb4;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff0f5;
+  }
+  #messages {
+    height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e0c0d9;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #ffe6f0;
+    text-align: left;
+  }
+  input[type=text] {
+    width: 70%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #e0c0d9;
+  }
+  button.send {
+    width: 20%;
+    padding: 10px;
+    margin-left: 5px;
+    border-radius: 8px;
+    border: none;
+    background-color: #d147a3;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button.send:hover { background-color: #a83685; }
+</style>
+</head>
+<body>
+
+<h1>Deep Talk với Người Yêu 💖</h1>
+
+<button onclick="nextQuestion()">Hỏi câu hỏi ngẫu nhiên</button>
+<div id="question"></div>
+
+<div id="chatBox">
+  <h2>Chat riêng của hai bạn</h2>
+  <div id="messages"></div>
+  <input type="text" id="messageInput" placeholder="Nhập tin nhắn...">
+  <button class="send" onclick="sendMessage()">Gửi</button>
+</div>
+
+<script>
+const questions = [
+  "Điều gì khiến bạn hạnh phúc nhất mỗi ngày?",
+  "Khi buồn, bạn thường làm gì để cảm thấy khá hơn?",
+  "Điều gì khiến bạn sợ hãi hoặc lo lắng nhất?",
+  "Có khoảnh khắc nào trong quá khứ khiến bạn nhớ mãi không?",
+  "Bạn cảm thấy an toàn nhất khi ở bên ai hoặc ở đâu?",
+  "Điều gì bạn trân trọng nhất trong mối quan hệ của chúng ta?",
+  "Bạn mong muốn cả hai thay đổi hay phát triển điều gì cùng nhau?",
+  "Khi giận nhau, bạn muốn đối phương làm gì để hàn gắn?",
+"Bạn nghĩ tình yêu là gì trong 1 câu?",
+  "Điều gì khiến bạn tin tưởng người khác nhất?",
+  "Nếu có thể quay lại 1 thời điểm trong quá khứ, bạn sẽ làm gì khác?",
+  "Điều gì bạn muốn đạt được trong 5 năm tới?",
+  "Nếu chỉ còn 1 ngày để sống, bạn sẽ làm gì?",
+  "Bạn nghĩ gì về khái niệm 'hạnh phúc'?",
+  "Điều gì khiến bạn cảm thấy tự hào về bản thân?",
+  "Bạn muốn chúng ta cùng làm gì trong tương lai gần?",
+  "Có bí mật gì bạn chưa từng chia sẻ không?",
+  "Điều gì khiến bạn thấy mình may mắn?",
+  "Bạn thích cách tôi quan tâm bạn theo cách nào?",
+  "Bạn sẽ làm gì nếu chúng ta bất đồng quan điểm?",
+  "Điều gì khiến bạn cảm thấy yêu bản thân hơn?",
+  "Kỷ niệm đầu tiên về tôi mà bạn nhớ rõ là gì?",
+  "Bạn muốn chúng ta có thói quen gì mỗi tuần?",
+  "Điều gì làm bạn cảm thấy thư giãn nhất?",
+  "Bạn muốn thử điều gì mới cùng nhau?",
+  "Một ngày lý tưởng của bạn trông như thế nào?",
+  "Bạn cảm thấy hạnh phúc nhất khi ở bên tôi lúc nào?",
+  "Bạn thích chúng ta nói chuyện về chủ đề gì nhất?",
+  "Điều gì khiến bạn cảm thấy được yêu thương?",
+  "Bạn muốn gửi lời gì cho tôi ngay bây giờ?",
+  "Có điều gì bạn muốn thay đổi trong cuộc sống không?",
+  "Bạn thường suy nghĩ về tương lai như thế nào?",
+  "Điều gì khiến bạn cảm thấy tự do?",
+  "Một thói quen xấu bạn muốn bỏ là gì?",
+  "Điều gì khiến bạn cảm thấy được động viên?",
+  "Bạn muốn tôi làm gì khi bạn mệt mỏi?",
+  "Một giấc mơ bạn muốn thực hiện là gì?",
+  "Bạn cảm thấy thế nào khi nhớ về chúng ta?",
+  "Điều gì khiến bạn cảm thấy bình yên?",
+  "Một điều bạn muốn thử nhưng chưa dám là gì?",
+  "Bạn muốn được tôi khen ngợi về điều gì?",
+  "Điều gì khiến bạn cảm thấy được lắng nghe?",
+  "Bạn nghĩ gì về việc chia sẻ cảm xúc mỗi ngày?",
+  "Một kỷ niệm vui với tôi bạn nhớ nhất?",
+  "Bạn muốn chúng ta cùng đọc hoặc xem gì?",
+  "Điều gì khiến bạn cảm thấy hứng thú?",
+  "Một ước mơ tuổi thơ bạn vẫn nhớ?",
+  "Bạn muốn thử trải nghiệm gì cùng tôi?",
+  "Điều gì khiến bạn cảm thấy trọn vẹn?",
+  "Bạn có câu hỏi nào muốn tôi trả lời không?"
+];
+
+function nextQuestion() {
+  const randomIndex = Math.floor(Math.random() * questions.length);
+  document.getElementById('question').innerText = questions[randomIndex];
+}
+
+// Chat offline
+function sendMessage() {
+  const input = document.getElementById('messageInput');
+  const msg = input.value.trim();
+  if(msg === "") return;
+const messagesDiv = document.getElementById('messages');
+  const messageElement = document.createElement('div');
+  messageElement.innerText = "Bạn: " + msg;
+  messagesDiv.appendChild(messageElement);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  input.value = "";
+}
+</script>
+
+</body>
+</html>
